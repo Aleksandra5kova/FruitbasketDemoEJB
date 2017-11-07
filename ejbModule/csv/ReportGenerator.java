@@ -4,17 +4,21 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
-import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 
 import beans.CrudService;
+import configuration.Config;
 import model.Company;
 
 @Stateless(name = "reportGenerator")
 @LocalBean
 public class ReportGenerator {
 
-	private static final String ABSOLUTE_PATH = "C:\\Users\\aleksandra.petkova\\Downloads\\eclipse-jee-mars-R-win32-x86_64\\eclipse\\workspace\\FruitbasketDemoEJB\\ejbModule\\META-INF\\companies.csv";
+	private static final String ABSOLUTE_PATH = "absolutePath";
+	private static final String FILE_NAME = "fileName";
+	private static final String FILE_HEADER = "company.fileHeader";
+
+	private Config config = Config.getInstance();
 
 	@EJB
 	private CrudService<Company> companyService;
@@ -23,9 +27,10 @@ public class ReportGenerator {
 
 	}
 
-	@Schedule(second = "*/15", minute = "*", hour = "*", persistent = false)
 	public void generateReport() {
 		List<Company> companies = companyService.findWithNamedQuery("Company.findAll");
-		CSVExporter.createCSVFile(ABSOLUTE_PATH, companies);
+		String filePath = config.getProperty(ABSOLUTE_PATH) + config.getProperty(FILE_NAME);
+		String fileHeader = config.getProperty(FILE_HEADER);
+		CSVExporter.createCSVFile(fileHeader, filePath, companies);
 	}
 }

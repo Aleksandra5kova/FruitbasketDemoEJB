@@ -11,14 +11,12 @@ public class CSVExporter {
 	private static final String COMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = System.lineSeparator();
 
-	private static final String FILE_HEADER = "id,name,address,email,phone";
-
-	public static void createCSVFile(String fileName, List<Company> companies) {
+	public static void createCSVFile(String fileHeader, String fileName, List<Company> companies) {
 		FileWriter fileWriter = null;
 
 		try {
 			fileWriter = new FileWriter(fileName);
-			fileWriter.append(FILE_HEADER);
+			fileWriter.append(fileHeader);
 			fileWriter.append(NEW_LINE_SEPARATOR);
 			for (Company company : companies) {
 				fileWriter.append(String.valueOf(company.getCompanyId()));
