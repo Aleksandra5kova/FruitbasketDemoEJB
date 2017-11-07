@@ -6,7 +6,7 @@ import java.util.List;
 
 import model.Company;
 
-public class CSVExporter {
+public class CompanyCSVExporter {
 
 	private static final String COMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = System.lineSeparator();

@@ -5,7 +5,7 @@ import java.util.List;
 import javax.ejb.Local;
 
 @Local
-public interface CrudService<T> {
+public interface CrudServiceLocal<T> {
 	
 	public T create(T t);
 

@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 
 @Stateless(name="crudService")
 @LocalBean
-public class CrudServiceBean<T> implements CrudService<T> {
+public class CrudServiceBean<T> implements CrudServiceLocal<T> {
 
 	@PersistenceContext(unitName = "FruitbasketDemoEJB")
 	EntityManager em;
