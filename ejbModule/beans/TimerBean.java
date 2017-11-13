@@ -16,6 +16,7 @@ import javax.ejb.TimerService;
 
 import configuration.Config;
 import report.CompanyReportGenerator;
+import report.ReportConstants;
 import utils.CommonUtils;
 import utils.CronTabConstants;
 import utils.TimerContraints;
@@ -45,8 +46,9 @@ public class TimerBean implements TimerBeanLocal {
 	@Timeout
 	public void timeOutHandler(Timer timer) {
 		if (timer.getInfo().equals(TimerContraints.COMPANY_INFO)) {
-			reportGenerator.generateCompanyReport();
-			System.out.println(timer.getNextTimeout());
+			String nextTimeout = String.valueOf(timer.getNextTimeout().getTime());
+			String prefix = nextTimeout + ReportConstants.SEPARATOR + timer.hashCode() + ReportConstants.SEPARATOR;
+			reportGenerator.generateCompanyReport(prefix);
 		}
 	}
 
@@ -57,9 +59,9 @@ public class TimerBean implements TimerBeanLocal {
 		ScheduleExpression scheduleExpression = new ScheduleExpression();
 		scheduleExpression.minute(date.get(CronTabConstants.MINUTES)).hour(date.get(CronTabConstants.HOUR))
 				.dayOfMonth(date.get(CronTabConstants.DAY_OF_MONTH)).month(date.get(CronTabConstants.MONTH))
-				.dayOfWeek(date.get(CronTabConstants.DAY_OF_WEEK));
+				.dayOfWeek(date.get(CronTabConstants.DAY_OF_WEEK)).second(date.get(CronTabConstants.SECOND));
 
-		timerService.createCalendarTimer(scheduleExpression, new TimerConfig(TimerContraints.COMPANY_INFO, true));
+		timerService.createCalendarTimer(scheduleExpression, new TimerConfig(TimerContraints.COMPANY_INFO, false));
 	}
 
 }
