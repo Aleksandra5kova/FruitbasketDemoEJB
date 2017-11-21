@@ -1,6 +1,7 @@
 package beans;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Local;
 
@@ -16,4 +17,6 @@ public interface CrudServiceLocal<T> {
 	public void delete(Class<T> type, Object id);
 
 	public List<T> findWithNamedQuery(String queryName);
+	
+	public T findWithNamedQuery(String queryName, Map<String, String> parameters);
 }

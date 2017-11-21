@@ -8,7 +8,7 @@ import configuration.Config;
 public class CommonUtils {
 	
 	public static Map<String, String> extractCrontabToMap(Config config, String expression) {
-		String[] parts = config.getProperty(expression).split(" ");
+		String[] parts = expression.split(" ");
 		Map<String, String> result = new HashMap<>();
 		result.put(CronTabConstants.SECOND, TimerContraints.ZERO);
 		result.put(CronTabConstants.MINUTES, parts[0]);

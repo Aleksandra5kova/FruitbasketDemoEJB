@@ -26,12 +26,11 @@ public class CompanyReportGenerator {
 	}
 
 	public void generateCompanyReport(String prefix) {
-		
 		List<Company> companies = companyService.findWithNamedQuery("Company.findAll");
-		String companyAbsolutePath = config.getProperty(ReportConstants.COMPANY_PATH);
-		String companyDocumentName = prefix + config.getProperty(ReportConstants.COMPANY_DOCUMENT_NAME);
+		String companyAbsolutePath = config.getProperty(ReportConstants.CSVREPORT_COMPANY_ABSOLUTEPATH);
+		String companyDocumentName = prefix + config.getProperty(ReportConstants.CSVREPORT_COMPANY_DOCUMENTNAME);
 		String companyFullName = companyAbsolutePath + companyDocumentName;
-		String companyHeader = config.getProperty(ReportConstants.COMPANY_HEADER);
+		String companyHeader = config.getProperty(ReportConstants.CSVREPORT_COMPANY_HEADER);
 
 		CompanyCSVExporter.createCSVFile(companyHeader, companyFullName, companies);
 	}

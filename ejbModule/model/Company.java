@@ -4,34 +4,37 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@NamedQuery(name="Company.findAll", query="SELECT c FROM Company c")
+@NamedQuery(name = "Company.findAll", query = "SELECT c FROM Company c")
 public class Company implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="company_id")
-	private String companyId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "company_id")
+	private Integer companyId;
 
-	@Column(name="company_address")
+	@Column(name = "company_address")
 	private String companyAddress;
 
-	@Column(name="company_email")
+	@Column(name = "company_email")
 	private String companyEmail;
 
-	@Column(name="company_name")
+	@Column(name = "company_name")
 	private String companyName;
 
-	@Column(name="company_phone")
+	@Column(name = "company_phone")
 	private String companyPhone;
 
 	public Company() {
+
 	}
 
-	public String getCompanyId() {
-		return this.companyId;
+	public Integer getCompanyId() {
+		return companyId;
 	}
 
-	public void setCompanyId(String companyId) {
+	public void setCompanyId(Integer companyId) {
 		this.companyId = companyId;
 	}
 
