@@ -45,6 +45,7 @@ public class TimerBean implements TimerBeanLocal {
 	@PostConstruct
 	public void createTimers() {
 		createCSVReportTimer();
+		createCSVReportTimer();
 	}
 
 	@PreDestroy
@@ -68,6 +69,43 @@ public class TimerBean implements TimerBeanLocal {
 		String timerInfo = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_INFO);
 		String timerExpression = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_EXPRESSION);
 
+		model.Timer timer = new model.Timer();
+		timer.setTimerUniqueName(timerUniqueName);
+		timer.setTimerInfo(timerInfo);
+		timer.setTimerExpression(timerExpression);
+
+		timerCrudService.create(timer);
+		Map<String, String> date = CommonUtils.extractCrontabToMap(config, timerExpression);
+		ScheduleExpression scheduleExpression = new ScheduleExpression();
+		scheduleExpression.minute(date.get(CronTabConstants.MINUTES)).hour(date.get(CronTabConstants.HOUR))
+				.dayOfMonth(date.get(CronTabConstants.DAY_OF_MONTH)).month(date.get(CronTabConstants.MONTH))
+				.dayOfWeek(date.get(CronTabConstants.DAY_OF_WEEK)).second(date.get(CronTabConstants.SECOND));
+		timerService.createCalendarTimer(scheduleExpression, new TimerConfig(timerUniqueName, true));
+
+	}
+
+	@Override
+	public void deleteCSVReportTimer() {
+		model.Timer timer = findCSVReportTimerByUniqueName();
+		timerCrudService.delete(model.Timer.class, timer.getTimerId());
+	}
+
+	private model.Timer findCSVReportTimerByUniqueName() {
+		String timerUniqueName = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_UNIQUENAME);
+
+		String namedQuery = config.getProperty(QueryContraints.NAMEDQUERY_TIMER_FINDBYUNIQUENAME);
+		String uniqueNameKey = config.getProperty(QueryContraints.NAMEDQUERY_PARAMETER_TIMER_UNIQUENAME);
+
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put(uniqueNameKey, timerUniqueName);
+		return timerCrudService.findWithNamedQuery(namedQuery, parameters);
+	}
+
+	public void createCSVReportTimer1() {
+		String timerUniqueName = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_UNIQUENAME);
+		String timerInfo = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_INFO);
+		String timerExpression = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_EXPRESSION);
+
 		model.Timer timer = findCSVReportTimerByUniqueName();
 
 		if (timer == null) {
@@ -86,23 +124,6 @@ public class TimerBean implements TimerBeanLocal {
 			timer1.setTimerExpression(timerExpression);
 			timerCrudService.create(timer1);
 		}
-	}
-
-	@Override
-	public void deleteCSVReportTimer() {
-		model.Timer timer = findCSVReportTimerByUniqueName();
-		timerCrudService.delete(model.Timer.class, timer.getTimerId());
-	}
-
-	private model.Timer findCSVReportTimerByUniqueName() {
-		String timerUniqueName = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_UNIQUENAME);
-
-		String namedQuery = config.getProperty(QueryContraints.NAMEDQUERY_TIMER_FINDBYUNIQUENAME);
-		String uniqueNameKey = config.getProperty(QueryContraints.NAMEDQUERY_PARAMETER_TIMER_UNIQUENAME);
-
-		Map<String, String> parameters = new HashMap<>();
-		parameters.put(uniqueNameKey, timerUniqueName);
-		return timerCrudService.findWithNamedQuery(namedQuery, parameters);
 	}
 
 }

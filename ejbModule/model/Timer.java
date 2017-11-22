@@ -16,7 +16,7 @@ public class Timer implements Serializable {
 	@Column(name = "timer_id")
 	private Integer timerId;
 
-	@Column(name = "timer_unique_name")
+	@Column(name = "timer_unique_name", unique = true)
 	private String timerUniqueName;
 
 	@Column(name = "timer_info")
