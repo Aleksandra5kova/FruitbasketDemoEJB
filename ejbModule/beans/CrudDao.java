@@ -1,39 +1,29 @@
 package beans;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import java.util.Map.Entry;
-
-@Stateless(name = "crudService")
+@Stateless(name = "crudDao")
 @LocalBean
-public class CrudServiceBean<T> implements CrudServiceLocal<T> {
+public class CrudDao<T> implements CrudDaoLocal<T> {
 
 	@PersistenceContext(unitName = "FruitbasketDemoEJB")
 	EntityManager em;
 
-	public CrudServiceBean() {
+	public CrudDao() {
 
 	}
 
 	@Override
-	public T create(T t) {
+	public T save(T t) {
 		em.persist(t);
 		return t;
-	}
-
-	@Override
-	public T find(Class<T> type, Object id) {
-		return em.find(type, id);
 	}
 
 	@Override
@@ -47,6 +37,11 @@ public class CrudServiceBean<T> implements CrudServiceLocal<T> {
 		em.remove(ref);
 	}
 
+	@Override
+	public T findById(Class<T> type, Object id) {
+		return em.find(type, id);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> findWithNamedQuery(String queryName) {
@@ -54,13 +49,9 @@ public class CrudServiceBean<T> implements CrudServiceLocal<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public T findWithNamedQuery(String queryName, Map<String, String> parameters) {
+	public T findWithNamedQuery(String queryName, String name, Object value) {
 		T t = null;
-		Set<Entry<String, String>> rawParameters = parameters.entrySet();
-		Query query = em.createNamedQuery(queryName);
-		for (Entry<String, String> entry : rawParameters) {
-			query.setParameter(entry.getKey(), entry.getValue());
-		}
+		Query query = em.createNamedQuery(queryName).setParameter(name, value);
 		try {
 			t = (T) query.getSingleResult();
 		} catch (NoResultException e) {

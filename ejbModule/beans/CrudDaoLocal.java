@@ -5,7 +5,7 @@ import java.util.List;
 import javax.ejb.Local;
 
 @Local
-public interface CrudServiceLocal<T> {
+public interface CrudDaoLocal<T> {
 
 	public T save(T t);
 
@@ -15,8 +15,8 @@ public interface CrudServiceLocal<T> {
 
 	public T findById(Class<T> type, Object id);
 
-	public T findByField(Class<T> type, String name, Object value);
+	public T findWithNamedQuery(String queryName, String name, Object value);
 
-	public List<T> findAll(Class<T> type);
+	public List<T> findWithNamedQuery(String queryName);
 
 }

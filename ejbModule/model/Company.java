@@ -1,13 +1,10 @@
 package model;
 
-import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@NamedQuery(name = "Company.findAll", query = "SELECT c FROM Company c")
-public class Company implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+@NamedQuery(name = "Company.FINDALL", query = "SELECT c FROM Company c ORDER BY c.companyId")
+public class Company {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,6 +65,12 @@ public class Company implements Serializable {
 
 	public void setCompanyPhone(String companyPhone) {
 		this.companyPhone = companyPhone;
+	}
+
+	@Override
+	public String toString() {
+		return "Company [companyId=" + companyId + ", companyAddress=" + companyAddress + ", companyEmail="
+				+ companyEmail + ", companyName=" + companyName + ", companyPhone=" + companyPhone + "]";
 	}
 
 }

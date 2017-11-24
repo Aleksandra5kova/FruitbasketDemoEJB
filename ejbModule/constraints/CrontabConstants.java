@@ -1,6 +1,6 @@
-package utils;
+package constraints;
 
-public class CronTabConstants {
+public class CrontabConstants {
 
 	public final static String SECOND = "second";
 	public final static String MINUTES = "minutes";

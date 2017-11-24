@@ -1,15 +1,11 @@
 package model;
 
-import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "Timer.findAll", query = "SELECT t FROM Timer t"),
-		@NamedQuery(name = "Timer.findByUniqueName", query = "SELECT t FROM Timer t WHERE t.timerUniqueName = :timerUniqueName") })
-@NamedNativeQuery(name = "Timer.lock", query = "LOCK TABLES timer WRITE")
-public class Timer implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+@NamedQueries({ @NamedQuery(name = "Timer.FINDALL", query = "SELECT t FROM Timer t"),
+		@NamedQuery(name = "Timer.FINDBYTIMERUNIQUENAME", query = "SELECT t FROM Timer t WHERE t.timerUniqueName = :timerUniqueName") })
+public class Timer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
