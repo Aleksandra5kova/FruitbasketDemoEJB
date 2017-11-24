@@ -6,5 +6,7 @@
 		<jta-data-source>jdbc/__fruitbasketPostgreSQL</jta-data-source>
 		<class>model.Company</class>
 		<class>model.Timer</class>
+		<class>model.Food</class>
+		<class>model.FoodType</class>
 	</persistence-unit>
 </persistence>

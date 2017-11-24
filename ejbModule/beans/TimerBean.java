@@ -22,6 +22,7 @@ import model.Company;
 import model.Timer;
 import report.Report;
 import utils.CommonUtils;
+import utils.TimerUtils;
 
 @Singleton
 @Startup
@@ -37,7 +38,7 @@ public class TimerBean implements TimerBeanLocal {
 
 	@EJB
 	private CrudServiceLocal<Company> companyService;
-	
+
 	@EJB
 	private CrudDaoLocal<Timer> crudDao;
 
@@ -50,55 +51,54 @@ public class TimerBean implements TimerBeanLocal {
 
 	@PostConstruct
 	public void createTimers() {
-		createCSVReportTimer();
+		createCompanyFindAllTimer();
 	}
 
 	@PreDestroy
 	public void deleteTimers() {
-		deleteCSVReportTimer();
+		deleteCompanyFindAllTimer();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Timeout
 	public void timeOutHandler(javax.ejb.Timer timer) {
-		String timerUniqueName = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_UNIQUENAME);
-		if (timer.getInfo().equals(timerUniqueName)) {
+		if (timer.getInfo().equals(TimerContraints.COMPANY_FIND_ALL)) {
 			List<Company> data = companyService.findAll(Company.class);
-			reportGenerator.generateReport(Company.class, data, timer.getNextTimeout().getTime());
+			reportGenerator.generateReport(Company.class, data, TimerContraints.COMPANY_FIND_ALL,
+					timer.getNextTimeout().getTime());
 		}
 	}
 
 	@Override
-	public void createCSVReportTimer() {
-		String timerUniqueName = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_UNIQUENAME);
-		String timerInfo = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_INFO);
-		String timerExpression = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_EXPRESSION);
+	public void createCompanyFindAllTimer() {
+		String timerName = TimerContraints.COMPANY_FIND_ALL;
+		String timerInfo = TimerUtils.getTimerInfo(timerName);
+		String timerExpression = TimerUtils.getTimerExpression(timerName);
 
 		Timer timer = new Timer();
-		timer.setTimerUniqueName(timerUniqueName);
+		timer.setTimerUniqueName(timerName);
 		timer.setTimerInfo(timerInfo);
 		timer.setTimerExpression(timerExpression);
 
 		timerService.save(timer);
-		Map<String, String> date = CommonUtils.extractCrontabToMap(config, timerExpression);
+		Map<String, String> date = CommonUtils.extractCrontabToMap(timerExpression);
 		ScheduleExpression scheduleExpression = new ScheduleExpression();
 		scheduleExpression.minute(date.get(CrontabConstants.MINUTES)).hour(date.get(CrontabConstants.HOUR))
 				.dayOfMonth(date.get(CrontabConstants.DAY_OF_MONTH)).month(date.get(CrontabConstants.MONTH))
 				.dayOfWeek(date.get(CrontabConstants.DAY_OF_WEEK)).second(date.get(CrontabConstants.SECOND));
-		ejbTimerService.createCalendarTimer(scheduleExpression, new TimerConfig(timerUniqueName, true));
-
+		ejbTimerService.createCalendarTimer(scheduleExpression, new TimerConfig(timerName, true));
 	}
 
 	@Override
-	public void deleteCSVReportTimer() {
-		Timer timer = findCSVReportTimerByUniqueName();
+	public void deleteCompanyFindAllTimer() {
+		String parameterName = config.getProperty(QueryContraints.TIMER_UNIQUENAME);
+		String timerName = TimerContraints.COMPANY_FIND_ALL;
+		Timer timer = findTimerByUniqueName(parameterName, timerName);
 		timerService.delete(Timer.class, timer.getTimerId());
 	}
 
-	private Timer findCSVReportTimerByUniqueName() {
-		String timerUniqueName = config.getProperty(TimerContraints.TIMER_COMPANY_CSVREPORT_UNIQUENAME);
-		String uniqueNameKey = config.getProperty(QueryContraints.NAMEDQUERY_PARAMETER_TIMER_UNIQUENAME);
-		return timerService.findByField(Timer.class, uniqueNameKey, timerUniqueName);
+	private Timer findTimerByUniqueName(String name, String value) {
+		return timerService.findByField(Timer.class, name, value);
 	}
 
 }

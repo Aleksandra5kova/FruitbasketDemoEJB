@@ -1,11 +1,8 @@
 package constraints;
 
 public class TimerContraints {
-	
-	public static final String TIMER_COMPANY_CSVREPORT_UNIQUENAME = "timer.company.CSVReport.uniqueName";
-	public static final String TIMER_COMPANY_CSVREPORT_INFO = "timer.company.CSVReport.info";
-	public static final String TIMER_COMPANY_CSVREPORT_EXPRESSION = "timer.company.CSVReport.expression";
-	
-	public static final String ZERO = "0";
+
+	public static final String COMPANY_FIND_ALL = "Company.FINDALL";
+	public static final String TIMER_FIND_BY_UNIQUENAME = "Timer.FINDBYTIMERUNIQUENAME";
 
 }

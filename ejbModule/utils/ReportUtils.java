@@ -2,7 +2,6 @@ package utils;
 
 import configuration.Config;
 
-@SuppressWarnings("rawtypes")
 public class ReportUtils {
 
 	public static final String ABSOLUTEPATH = "absolutePath";
@@ -12,28 +11,28 @@ public class ReportUtils {
 
 	private static final Config config = Config.getInstance();
 
-	public static String getFileName(Class type, String namePrefix) {
-		String absolutePath = getAbsolutePath(type);
-		String documentName = getDocumentName(type, namePrefix);
+	public static String getFileName(String name, String namePrefix) {
+		String absolutePath = getAbsolutePath(name);
+		String documentName = getDocumentName(name, namePrefix);
 		return absolutePath + documentName;
 	}
 
-	private static String getAbsolutePath(Class type) {
-		String absolutePathProperty = getAbsolutePathProperty(type);
+	private static String getAbsolutePath(String name) {
+		String absolutePathProperty = getAbsolutePathProperty(name);
 		return config.getProperty(absolutePathProperty);
 	}
 
-	private static String getDocumentName(Class type, String namePrefix) {
-		String documentNameProperty = getDocumentNameProperty(type);
+	private static String getDocumentName(String name, String namePrefix) {
+		String documentNameProperty = getDocumentNameProperty(name);
 		return namePrefix + config.getProperty(documentNameProperty);
 	}
 
-	private static String getDocumentNameProperty(Class type) {
-		return type.getSimpleName() + ReportUtils.SEPARATOR + ReportUtils.DOCUMENTNAME;
+	private static String getDocumentNameProperty(String name) {
+		return name + ReportUtils.SEPARATOR + ReportUtils.DOCUMENTNAME;
 	}
 
-	private static String getAbsolutePathProperty(Class type) {
-		return type.getSimpleName() + ReportUtils.SEPARATOR + ReportUtils.ABSOLUTEPATH;
+	private static String getAbsolutePathProperty(String name) {
+		return name + ReportUtils.SEPARATOR + ReportUtils.ABSOLUTEPATH;
 	}
 
 }

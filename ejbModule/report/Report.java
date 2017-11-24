@@ -19,8 +19,8 @@ public class Report<T> {
 
 	}
 
-	public void generateReport(Class<T> type, List<T> data, long namePrefix) {
-		String fileName = ReportUtils.getFileName(type, String.valueOf(namePrefix));
+	public void generateReport(Class<T> type, List<T> data, String name, long prefix) {
+		String fileName = ReportUtils.getFileName(name, String.valueOf(prefix));
 		CSVExporter.createCSVFile(type, data, fileName);
 	}
 }
